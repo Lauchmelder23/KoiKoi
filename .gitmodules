@@ -1,0 +1,9 @@
+[submodule "vendor/lol"]
+	path = vendor/lol
+	url = git@github.com:Lauchmelder23/lol.git
+[submodule "vendor/glfw"]
+	path = vendor/glfw
+	url = git@github.com:glfw/glfw.git
+[submodule "vendor/spdlog"]
+	path = vendor/spdlog
+	url = https://github.com/gabime/spdlog
