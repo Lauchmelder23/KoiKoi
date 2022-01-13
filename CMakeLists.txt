@@ -5,8 +5,8 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("KoiKoi")
 
-
 # Include sub-projects.
 add_subdirectory ("vendor/spdlog")
 add_subdirectory ("vendor/glfw")
+add_subdirectory ("vendor/lol")
 add_subdirectory ("src")

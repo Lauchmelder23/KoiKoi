@@ -1,6 +1,5 @@
 #include "Window.hpp"
 
-#include <GLFW/glfw3.h>
 #include <spdlog/spdlog.h>
 
 Window::Window(int width, int height, const std::string& title) :
@@ -19,6 +18,21 @@ Window::Window(int width, int height, const std::string& title) :
 
 	spdlog::debug("Created GLFWwindow \n\tDimensions = ({}px, {}px), \n\tTitle = {}, \n\tFullscreen = {}", width, height, title, "NO");
 	glfwMakeContextCurrent(window);
+
+	glfwSetFramebufferSizeCallback(window, 
+		[](GLFWwindow* window, int width, int height)
+		{
+			glViewport(0, 0, width, height);
+			UserData* data = (UserData*)glfwGetWindowUserPointer(window);
+			data->camera->Update(0.0f, ((float)width / (float)height) * 1.0f, 0.0f, 1.0f, -100.0f, 100.0f);
+		}
+	);
+
+	camera = lol::OrthogonalCamera(0.0f, ((float)width / (float)height) * 1.0f, 0.0f, 1.0f);
+	data.camera = &camera;
+	spdlog::debug("Created orthogonal camera");
+
+	glfwSetWindowUserPointer(window, (void*)&data);
 }
 
 Window::~Window()
@@ -28,6 +42,16 @@ Window::~Window()
 		glfwDestroyWindow(window);
 		spdlog::debug("Destroyed GLFWwindow");
 	}
+}
+
+void Window::Clear()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Window::Draw(lol::Drawable& drawable)
+{
+	camera.Draw(drawable);
 }
 
 void Window::Display()

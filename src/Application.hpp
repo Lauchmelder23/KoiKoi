@@ -1,6 +1,9 @@
 #pragma once
 
+#include <lol/lol.hpp>
+
 class Window;
+class Card;
 
 class Application
 {
@@ -17,6 +20,9 @@ public:
 private:
 	bool valid;
 	Window* window;
+
+	lol::ObjectManager manager;
+	Card* card;
 
 private:
 	Application();
