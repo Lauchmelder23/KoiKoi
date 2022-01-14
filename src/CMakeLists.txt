@@ -2,7 +2,10 @@ add_executable(koikoi
 	"main.cpp"
 	"Application.cpp" 
 	"Window.cpp"
- "Card.cpp")
+	"Card.cpp"
+	"CardStack.cpp"
+	"Board.cpp"
+)
 
 set( RC_DEPENDS "" )
 

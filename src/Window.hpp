@@ -20,7 +20,7 @@ public:
 	inline bool ShouldClose() { return glfwWindowShouldClose(window); }
 
 	void Clear();
-	void Draw(lol::Drawable& drawable);
+	void Draw(lol::Layer& layer);
 	void Display();
 
 private:

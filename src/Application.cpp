@@ -1,6 +1,7 @@
 #include "Application.hpp"
 
 #include <chrono>
+#include <random>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -9,9 +10,11 @@
 #include <stbi_image.h>
 
 #include "Window.hpp"
-#include "Card.hpp"
+#include "CardStack.hpp"
+#include "Board.hpp"
 
 #include "resources.h"
+#include "ObjectIDs.hpp"
 
 void Application::Run()
 {
@@ -22,32 +25,18 @@ void Application::Run()
 	}
 
 	spdlog::debug("Launched Application");
-
-	int currentMonth = 0;
-	int currentType = 0;
-	std::chrono::system_clock::time_point begin = std::chrono::system_clock::now();
 	while (!window->ShouldClose())
 	{
 		glfwPollEvents();
 
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - begin).count() > 250)
-		{
-			begin = std::chrono::system_clock::now();
-			currentType++;
-			if (currentType > 3)
-			{
-				currentMonth++;
-				if (currentMonth > 11)
-					currentMonth = 0;
-
-				currentType = 0;
-			}
-
-			card->UpdateSuitAndType(static_cast<Month>(currentMonth), currentType);
-		}
+		for (lol::Layer* layer : layerStack)
+			layer->OnUpdate();
 
 		window->Clear();
-		window->Draw(*card);
+
+		for (lol::Layer* layer : layerStack)
+			window->Draw(*layer);
+
 		window->Display();
 	}
 }
@@ -81,18 +70,28 @@ Application::Application() :
 	spdlog::debug("Loading resources...");
 
 	lol::Image image((unsigned char*)card_atlas_png, card_atlas_png_size);
-	manager.Create<lol::Texture2D>(0, image, lol::TextureFormat::RGBA);
-	manager.Create<lol::Shader>(1, std::string((char*)card_vs, card_vs_size), std::string((char*)card_fs, card_fs_size));
+	manager.Create<lol::Texture2D>(TEXTURE_CARD_ATLAS, image, lol::TextureFormat::RGBA);
+	manager.Create<lol::Shader>(SHADER_CARD, std::string((char*)card_vs, card_vs_size), std::string((char*)card_fs, card_fs_size));
 	spdlog::debug("Done!");
 
-	card = new Card(manager, Month::August, 0);
+	spdlog::debug("Creating card stack");
+	manager.Create<CardStack>(CARD_STACK, manager);
+
+	spdlog::debug("Setting up board");
+	layerStack.push_back(new Board(manager));
 
 	glViewport(0, 0, 1280, 720);
+
+	// Enable transparency
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 Application::~Application()
 {
-	delete card;
+	for (lol::Layer* layer : layerStack)
+		delete layer;
+
 	delete window;
 
 	glfwTerminate();

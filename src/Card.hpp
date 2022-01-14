@@ -13,6 +13,7 @@ public:
 	Card(lol::ObjectManager& manager, Month month, int type);
 
 	void UpdateSuitAndType(Month month, int type);
+	glm::vec3 GetSize() { return glm::vec3(0.61035f, 1.0f, 0.0f) * GetScale(); }
 
 private:
 	void PreRender(const lol::CameraBase& camera) override;

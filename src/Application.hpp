@@ -1,9 +1,10 @@
 #pragma once
 
+#include <vector>
 #include <lol/lol.hpp>
 
+
 class Window;
-class Card;
 
 class Application
 {
@@ -22,7 +23,7 @@ private:
 	Window* window;
 
 	lol::ObjectManager manager;
-	Card* card;
+	std::vector<lol::Layer*> layerStack;
 
 private:
 	Application();

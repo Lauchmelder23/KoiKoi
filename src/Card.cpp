@@ -1,10 +1,13 @@
 #include "Card.hpp"
 
+#include <spdlog/spdlog.h>
+#include "ObjectIDs.hpp"
+
 Card::Card(lol::ObjectManager& manager, Month month, int type)
 {
 	try
 	{
-		vao = manager.Get<lol::VertexArray>(2);
+		vao = manager.Get<lol::VertexArray>(VAO_CARD);
 	} 
 	catch (const lol::ObjectNotFoundException& err)
 	{
@@ -23,11 +26,16 @@ Card::Card(lol::ObjectManager& manager, Month month, int type)
 
 		std::shared_ptr<lol::ElementBuffer> ebo = std::make_shared<lol::ElementBuffer>(std::vector<unsigned int>{ 0, 1, 2, 0, 2, 3 });
 
-		vao = manager.Create<lol::VertexArray>(2, vbo, ebo);
+		vao = manager.Create<lol::VertexArray>(VAO_CARD, vbo, ebo);
+	}
+	catch (const std::exception& err)
+	{
+		spdlog::critical("Unknown error in constructor of Card");
+		throw err;
 	}
 
-	shader = manager.Get<lol::Shader>(1);
-	cards = manager.Get<lol::Texture2D>(0);
+	shader = manager.Get<lol::Shader>(SHADER_CARD);
+	cards = manager.Get<lol::Texture2D>(TEXTURE_CARD_ATLAS);
 
 	UpdateSuitAndType(month, type);
 }
@@ -48,6 +56,7 @@ void Card::PreRender(const lol::CameraBase& camera)
 	cards->Bind();
 	shader->SetUniform("offset", textureOffset);
 
+	shader->SetUniform("model", transformation);
 	shader->SetUniform("view", camera.GetView());
 	shader->SetUniform("projection", camera.GetProjection());
 }

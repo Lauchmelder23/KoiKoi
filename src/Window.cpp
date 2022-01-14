@@ -49,9 +49,9 @@ void Window::Clear()
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Window::Draw(lol::Drawable& drawable)
+void Window::Draw(lol::Layer& layer)
 {
-	camera.Draw(drawable);
+	layer.OnRender(camera);
 }
 
 void Window::Display()
