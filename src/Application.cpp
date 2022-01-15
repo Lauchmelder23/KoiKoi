@@ -10,8 +10,8 @@
 #include <stbi_image.h>
 
 #include "Window.hpp"
-#include "CardStack.hpp"
-#include "Board.hpp"
+#include "layers/CardStackLayer.hpp"
+#include "layers/BoardLayer.hpp"
 
 #include "resources.h"
 #include "ObjectIDs.hpp"
@@ -41,6 +41,12 @@ void Application::Run()
 	}
 }
 
+void Application::OnKeyPressed(unsigned int character)
+{
+	if (character == 'd' || character == 'D')
+		game.GetBoard().RevealCard();
+}
+
 Application::Application() :
 	valid(true), window(nullptr)
 {
@@ -56,7 +62,7 @@ Application::Application() :
 	}
 	spdlog::debug("GLFW initialized");
 
-	window = new Window(1280, 720, "Koi Koi");
+	window = new Window(this, 1280, 720, "Koi Koi");
 	valid = window->IsValid();
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -78,11 +84,14 @@ Application::Application() :
 	manager.Create<lol::Shader>(SHADER_CARD, std::string((char*)card_vs, card_vs_size), std::string((char*)card_fs, card_fs_size));
 	spdlog::debug("Done!");
 
-	spdlog::debug("Creating card stack");
-	
+	spdlog::debug("Setting up layers");
+	layerStack.push_back(new CardStackLayer(manager, game.GetStack()));
+	BoardLayer* boardLayer = new BoardLayer(manager, game.GetBoard());
+	game.GetBoard().SetRevealCallback(std::bind(&BoardLayer::OnRevealCard, boardLayer, std::placeholders::_1));
+	layerStack.push_back(boardLayer);
 
-	spdlog::debug("Setting up board");
-	layerStack.push_back(new Board(manager));
+	spdlog::debug("Setting up game");
+	game.Setup();
 
 	glViewport(0, 0, 1280, 720);
 

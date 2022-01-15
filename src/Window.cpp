@@ -1,9 +1,10 @@
 #include "Window.hpp"
 
 #include <spdlog/spdlog.h>
+#include "Application.hpp"
 
-Window::Window(int width, int height, const std::string& title) :
-	window(NULL), valid(true)
+Window::Window(Application* app, int width, int height, const std::string& title) :
+	window(NULL), valid(true), app(app)
 {
 	window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 	if (window == NULL)
@@ -28,9 +29,19 @@ Window::Window(int width, int height, const std::string& title) :
 		}
 	);
 
+	glfwSetCharCallback(window,
+		[](GLFWwindow* window, unsigned int character)
+		{
+			UserData* data = (UserData*)glfwGetWindowUserPointer(window);
+			data->app->OnKeyPressed(character);
+		}
+	);
+
 	camera = lol::OrthogonalCamera(0.0f, ((float)width / (float)height) * 1.0f, 0.0f, 1.0f);
 	data.camera = &camera;
 	spdlog::debug("Created orthogonal camera");
+
+	data.app = app;
 
 	glfwSetWindowUserPointer(window, (void*)&data);
 }

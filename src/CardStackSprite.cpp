@@ -1,14 +1,10 @@
-#include "CardStack.hpp"
-
-#include <algorithm>
-#include <chrono>
-#include <random>
+#include "CardStackSprite.hpp"
 
 #include <spdlog/spdlog.h>
 
 #include "ObjectIDs.hpp"
 
-CardStack::CardStack(lol::ObjectManager& manager)
+CardStackSprite::CardStackSprite(lol::ObjectManager& manager)
 {
 	try
 	{
@@ -40,36 +36,16 @@ CardStack::CardStack(lol::ObjectManager& manager)
 	}
 
 	shader = manager.Get<lol::Shader>(SHADER_CARD);
-	backside = manager.Get<lol::Texture2D>(TEXTURE_BACKSIDE);
-
-	// Create a full stack of cards
-	for (int month = 0; month < 11; month++)
-	{
-		for (int type = 0; type < 4; type++)
-		{
-			stack.push_back(std::make_shared<Card>(manager, static_cast<Month>(month), type));
-		}
-	}
-
-	// Shuffle stack
-	std::default_random_engine engine(time(0));
-	std::shuffle(stack.begin(), stack.end(), engine);
+	texture = manager.Get<lol::Texture2D>(TEXTURE_BACKSIDE);
 }
 
-CardStack::~CardStack()
+CardStackSprite::~CardStackSprite()
 {
 }
 
-std::shared_ptr<Card> CardStack::DrawCard()
+void CardStackSprite::PreRender(const lol::CameraBase& camera)
 {
-	std::shared_ptr<Card> drawnCard = stack.back();
-	stack.pop_back();
-	return drawnCard;
-}
-
-void CardStack::PreRender(const lol::CameraBase& camera)
-{
-	backside->Bind();
+	texture->Bind();
 	shader->SetUniform("offset", glm::vec2(0.0f));
 
 	shader->SetUniform("model", transformation);

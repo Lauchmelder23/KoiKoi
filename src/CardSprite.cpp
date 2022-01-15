@@ -1,9 +1,10 @@
-#include "Card.hpp"
+#include "CardSprite.hpp"
 
 #include <spdlog/spdlog.h>
 #include "ObjectIDs.hpp"
 
-Card::Card(lol::ObjectManager& manager, Month month, int type)
+CardSprite::CardSprite(lol::ObjectManager& manager, std::shared_ptr<Card> card) :
+	card(card)
 {
 	try
 	{
@@ -36,22 +37,14 @@ Card::Card(lol::ObjectManager& manager, Month month, int type)
 
 	shader = manager.Get<lol::Shader>(SHADER_CARD);
 	cards = manager.Get<lol::Texture2D>(TEXTURE_CARD_ATLAS);
-
-	UpdateSuitAndType(month, type);
-}
-
-void Card::UpdateSuitAndType(Month month, int type)
-{
-	this->suit = month;
-	this->type = type;
-
+	
 	textureOffset = glm::vec2(
-		static_cast<int>(this->suit) / 12.0f,
-		this->type / 4.0f
+		static_cast<int>(card->GetSuit()) / 12.0f,
+		card->GetType() / 4.0f
 	);
 }
 
-void Card::PreRender(const lol::CameraBase& camera)
+void CardSprite::PreRender(const lol::CameraBase& camera)
 {
 	cards->Bind();
 	shader->SetUniform("offset", textureOffset);

@@ -2,9 +2,10 @@ add_executable(koikoi
 	"main.cpp"
 	"Application.cpp" 
 	"Window.cpp"
-	"Card.cpp"
-	"CardStack.cpp"
-	"Board.cpp"
+	"CardSprite.cpp"
+	"CardStackSprite.cpp"
+	"layers/CardStackLayer.cpp"
+	"layers/BoardLayer.cpp"
 )
 
 set( RC_DEPENDS "" )
@@ -41,10 +42,12 @@ target_include_directories(koikoi PUBLIC
 	spdlog
 	glfw
 	lol
+	koikoiengine
 )
 
 target_link_libraries(koikoi
 	spdlog
 	glfw
 	lol
+	koikoiengine
 )

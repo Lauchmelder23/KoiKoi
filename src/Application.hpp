@@ -4,6 +4,7 @@
 #include <lol/lol.hpp>
 
 #include "CardStack.hpp"
+#include "Game.hpp"
 
 
 class Window;
@@ -19,10 +20,13 @@ public:
 
 public:
 	void Run();
+	void OnKeyPressed(unsigned int character);	// TODO: Remove later on
 
 private:
 	bool valid;
 	Window* window;
+
+	Game game;
 
 	lol::ObjectManager manager;
 	std::vector<lol::Layer*> layerStack;

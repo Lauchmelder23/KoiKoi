@@ -9,4 +9,6 @@ project ("KoiKoi")
 add_subdirectory ("vendor/spdlog")
 add_subdirectory ("vendor/glfw")
 add_subdirectory ("vendor/lol")
+
+add_subdirectory ("engine")
 add_subdirectory ("src")
