@@ -24,9 +24,14 @@ void Application::Run()
 		return;
 	}
 
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
 	spdlog::debug("Launched Application");
 	while (!window->ShouldClose())
 	{
+		frametime = std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::steady_clock::now() - begin).count();
+		begin = std::chrono::steady_clock::now();
+
 		glfwPollEvents();
 
 		for (lol::Layer* layer : layerStack)
@@ -44,7 +49,10 @@ void Application::Run()
 void Application::OnKeyPressed(unsigned int character)
 {
 	if (character == 'd' || character == 'D')
-		game.GetBoard().RevealCard();
+	{
+		if(!game.GetStack().Empty())
+			game.GetBoard().RevealCard();
+	}
 }
 
 Application::Application() :

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <chrono>
 #include <lol/lol.hpp>
 
 #include "CardStack.hpp"
@@ -22,6 +23,8 @@ public:
 	void Run();
 	void OnKeyPressed(unsigned int character);	// TODO: Remove later on
 
+	inline double GetFrametime() { return frametime; }
+
 private:
 	bool valid;
 	Window* window;
@@ -30,6 +33,8 @@ private:
 
 	lol::ObjectManager manager;
 	std::vector<lol::Layer*> layerStack;
+
+	double frametime;
 
 private:
 	Application();

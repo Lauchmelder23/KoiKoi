@@ -3,8 +3,14 @@
 #include <spdlog/spdlog.h>
 #include "ObjectIDs.hpp"
 
+double ParametricCurve(double t, double alpha, double n)
+{
+	double power = pow(t / n, alpha);
+	return power / (power + pow(1.0f - t / n, alpha));
+}
+
 CardSprite::CardSprite(lol::ObjectManager& manager, std::shared_ptr<Card> card) :
-	card(card)
+	card(card), animationRunning(false)
 {
 	try
 	{
@@ -42,6 +48,33 @@ CardSprite::CardSprite(lol::ObjectManager& manager, std::shared_ptr<Card> card) 
 		static_cast<int>(card->GetSuit()) / 12.0f,
 		card->GetType() / 4.0f
 	);
+}
+
+void CardSprite::CreateAnimation(Animation animation)
+{
+	this->animation = animation;
+	t = 0.0;
+	animationRunning = true;
+}
+
+void CardSprite::Update(double dt)
+{
+	if (!animationRunning)
+		return;
+
+	t += dt;
+	if (t >= animation.duration)	// Animation is finished
+	{
+		SetPosition(animation.to);
+		animationRunning = false;
+		return;
+	}
+
+	double animVal = ParametricCurve(t, animation.alpha, animation.duration);
+	glm::vec3 distance = animation.to - animation.from;
+	glm::vec3 newPosition = animation.from + (float)animVal * distance;
+
+	SetPosition(newPosition);
 }
 
 void CardSprite::PreRender(const lol::CameraBase& camera)
