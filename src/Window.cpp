@@ -47,7 +47,7 @@ Window::~Window()
 void Window::Clear()
 {
 	glClearColor(7.0f / 255.0f, 1.0f / 255.0f, 15.0f / 255.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Window::Draw(lol::Layer& layer)

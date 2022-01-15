@@ -3,6 +3,8 @@
 #include <vector>
 #include <lol/lol.hpp>
 
+#include "CardStack.hpp"
+
 
 class Window;
 

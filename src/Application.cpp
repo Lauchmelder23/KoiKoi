@@ -71,11 +71,15 @@ Application::Application() :
 
 	lol::Image image((unsigned char*)card_atlas_png, card_atlas_png_size);
 	manager.Create<lol::Texture2D>(TEXTURE_CARD_ATLAS, image, lol::TextureFormat::RGBA);
+
+	lol::Image backsideImage((unsigned char*)card_backside_png, card_backside_png_size);
+	manager.Create<lol::Texture2D>(TEXTURE_BACKSIDE, backsideImage, lol::TextureFormat::RGBA);
+
 	manager.Create<lol::Shader>(SHADER_CARD, std::string((char*)card_vs, card_vs_size), std::string((char*)card_fs, card_fs_size));
 	spdlog::debug("Done!");
 
 	spdlog::debug("Creating card stack");
-	manager.Create<CardStack>(CARD_STACK, manager);
+	
 
 	spdlog::debug("Setting up board");
 	layerStack.push_back(new Board(manager));
@@ -84,6 +88,7 @@ Application::Application() :
 
 	// Enable transparency
 	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 

@@ -8,20 +8,20 @@ Card::Card(lol::ObjectManager& manager, Month month, int type)
 	try
 	{
 		vao = manager.Get<lol::VertexArray>(VAO_CARD);
-	} 
+	}
 	catch (const lol::ObjectNotFoundException& err)
 	{
 		std::shared_ptr<lol::VertexBuffer> vbo = std::make_shared<lol::VertexBuffer>(std::vector<float>{
-			0.0f, 0.0f,			0.0f, 1.0f / 4.0f,
-			0.0f, 1.0f,			0.0f, 0.0f,
-			0.61035f, 1.0f,		1.0f / 12.0f, 0.0f,
-			0.61035f, 0.0f,		1.0f / 12.0f, 1.0f / 4.0f
+			0.0f, 0.0f, 0.0f, 1.0f / 4.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			0.61035f, 1.0f, 1.0f / 12.0f, 0.0f,
+			0.61035f, 0.0f, 1.0f / 12.0f, 1.0f / 4.0f
 		});
-		
+
 		lol::BufferLayout layout({
 			lol::VertexAttribute(lol::Type::Float, 2, false),
 			lol::VertexAttribute(lol::Type::Float, 2, false)
-		});
+			});
 		vbo->SetLayout(layout);
 
 		std::shared_ptr<lol::ElementBuffer> ebo = std::make_shared<lol::ElementBuffer>(std::vector<unsigned int>{ 0, 1, 2, 0, 2, 3 });
@@ -30,7 +30,7 @@ Card::Card(lol::ObjectManager& manager, Month month, int type)
 	}
 	catch (const std::exception& err)
 	{
-		spdlog::critical("Unknown error in constructor of Card");
+		spdlog::critical("Unknown error in constructor of CardStack");
 		throw err;
 	}
 
