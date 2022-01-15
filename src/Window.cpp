@@ -46,6 +46,7 @@ Window::~Window()
 
 void Window::Clear()
 {
+	glClearColor(7.0f / 255.0f, 1.0f / 255.0f, 15.0f / 255.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
