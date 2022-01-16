@@ -66,6 +66,7 @@ void CardSprite::Update(double dt)
 	if (t >= animation.duration)	// Animation is finished
 	{
 		SetPosition(animation.to);
+		animation.onAnimationEnd(this);
 		animationRunning = false;
 		return;
 	}

@@ -10,6 +10,7 @@ public:
 	~Game() {}
 
 	void Setup();
+	void Cleanup();
 	inline CardStack& GetStack() { return stack; }
 	inline Board& GetBoard() { return board; }
 

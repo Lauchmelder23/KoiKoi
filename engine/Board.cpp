@@ -11,11 +11,23 @@ Board::Board(Game* parent) :
 void Board::RevealCard()
 {
 	openCards.push_back(parent->GetStack().DrawCard());
-	if (callback)
-		callback(openCards.back());
+	if (revealCallback)
+		revealCallback(openCards.back());
+}
+
+void Board::Cleanup()
+{
+	openCards.clear();
+	if (cleanupCallback)
+		cleanupCallback();
 }
 
 void Board::SetRevealCallback(RevealCallbackFunc callbackFunc)
 {
-	callback = callbackFunc;
+	revealCallback = callbackFunc;
+}
+
+void Board::SetCleanupCallback(CleanupCallbackFunc callbackFunc)
+{
+	cleanupCallback = callbackFunc;
 }

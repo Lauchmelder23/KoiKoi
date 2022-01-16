@@ -16,7 +16,7 @@ CardStack::CardStack()
 	}
 
 	// Shuffle stack
-	std::default_random_engine engine(time(0));
+	std::default_random_engine engine(std::chrono::steady_clock::now().time_since_epoch().count());
 	std::shuffle(stack.begin(), stack.end(), engine);
 }
 

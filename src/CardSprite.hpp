@@ -3,12 +3,15 @@
 #include <lol/lol.hpp>
 #include "Card.hpp"
 
+class CardSprite;
+
 struct Animation
 {
 	glm::vec3 from;
 	glm::vec3 to;
 	double alpha;
 	double duration;
+	std::function<void(CardSprite*)> onAnimationEnd = [](CardSprite*) {};
 };
 
 class CardSprite : public lol::Drawable, public lol::Transformable

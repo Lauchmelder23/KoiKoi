@@ -53,6 +53,12 @@ void Application::OnKeyPressed(unsigned int character)
 		if(!game.GetStack().Empty())
 			game.GetBoard().RevealCard();
 	}
+
+	if (character == 'r' || character == 'R')
+	{
+		game.Cleanup();
+		game.Setup();
+	}
 }
 
 Application::Application() :
@@ -94,8 +100,10 @@ Application::Application() :
 
 	spdlog::debug("Setting up layers");
 	layerStack.push_back(new CardStackLayer(manager, game.GetStack()));
+
 	BoardLayer* boardLayer = new BoardLayer(manager, game.GetBoard());
 	game.GetBoard().SetRevealCallback(std::bind(&BoardLayer::OnRevealCard, boardLayer, std::placeholders::_1));
+	game.GetBoard().SetCleanupCallback(std::bind(&BoardLayer::OnCleanup, boardLayer));
 	layerStack.push_back(boardLayer);
 
 	spdlog::debug("Setting up game");

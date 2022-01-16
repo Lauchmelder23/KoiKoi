@@ -12,3 +12,9 @@ void Game::Setup()
 	for (int i = 0; i < 8; i++)
 		board.RevealCard();
 }
+
+void Game::Cleanup()
+{
+	stack = CardStack();
+	board.Cleanup();
+}
